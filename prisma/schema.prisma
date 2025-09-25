@@ -47,6 +47,7 @@ model File {
   userId     String
   folder     Folder?    @relation(fields: [folderId], references: [id])
   folderId   String?
+  folderName String?
   shares     Share[]
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt

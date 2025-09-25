@@ -31,13 +31,15 @@ async function uploadFolder(prisma, userId, files) {
             data: file.buffer,
             user: {
                 connect: { id: userId }
-            }
+            },
+            folderName: parts.pop() || null
         };
 
         if (parentId) {
             fileData.folder = {
                 connect: { id: parentId }
             };
+            
         }
 
         await prisma.file.create({ data: fileData });

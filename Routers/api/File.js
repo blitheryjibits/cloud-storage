@@ -49,6 +49,7 @@ router.post('/upload', upload.array('files'), async (req, res) => {
     
 
     // Map each file to a Prisma create input
+    // Add files to root folder as standard behavior
   const fileData = uploadedFiles.map(file => ({
     name: file.originalname,
     size: file.size,
@@ -56,7 +57,8 @@ router.post('/upload', upload.array('files'), async (req, res) => {
     url: `/uploads/${file.filename}`,
     data: file.buffer,
     userId: _userId,
-    folderId: rootFolder.id
+    folderId: rootFolder.id,
+    folderName: 'Root'
     }));
 
     // Create all records in one go
