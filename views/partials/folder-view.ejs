@@ -4,6 +4,7 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <% folders.forEach(folder => { %>
           <%if (folder.name !== 'Root') { %>
+            <a href="/api/users/drive/<%= folder.id %>">
             <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
               <div class="flex items-center space-x-2">
                 <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
@@ -12,6 +13,7 @@
                 <span class="text-gray-800 font-medium"><%= folder.name %></span>
               </div>
             </div>
+            </a>
           <% } %>
         <% }) %>
       </div>
