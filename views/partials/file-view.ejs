@@ -1,0 +1,19 @@
+<div>
+      <h3 class="text-sm font-medium text-gray-600 mb-2">Files</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <% files.forEach(file => { %>
+          <a href="/api/files/<%=file.id%>" target="_blank" rel="noopener noreferrer">
+          <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition"
+          data-file-id="<%= file.id %>">
+            <div class="flex items-center space-x-2">
+              <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V7l-5-4H4z" />
+              </svg>
+              <span class="text-gray-800 font-medium"><%= file.name %></span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Modified: <%= file.updatedAt.toDateString() %></p>
+          </div>
+          </a>
+          <% }) %>
+      </div>
+    </div>
