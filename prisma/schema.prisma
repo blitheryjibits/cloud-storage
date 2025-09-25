@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Schemas
+
+model User {
+  id         String     @id @default(uuid())
+  username   String     @unique
+  password   String
+  email      String     @unique
+  createdAt  DateTime   @default(now())
+  userAvatar String?    @default("/images/default-avatar.png") // URL to avatar image
+  folders    Folder[]
+  files      File[]
+  activities Activity[]
+}
+
+model Folder {
+  id        String   @id @default(uuid())
+  name      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  parentId  String? //for nested folders
+  files     File[]
+  shares    Share[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, userId, parentId])
+}
+
+model File {
+  id         String     @id @default(uuid())
+  name       String
+  size       Int
+  mimeType   String
+  url        String?
+  data       Bytes
+  user       User       @relation(fields: [userId], references: [id])
+  userId     String
+  folder     Folder?    @relation(fields: [folderId], references: [id])
+  folderId   String?
+  shares     Share[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  activities Activity[]
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  file      File     @relation(fields: [fileId], references: [id])
+  fileId    String
+  action    String
+  createdAt DateTime @default(now())
+}
+
+model Share {
+  id              String   @id @default(uuid())
+  file            File?    @relation(fields: [fileId], references: [id])
+  fileId          String?
+  folder          Folder?  @relation(fields: [folderId], references: [id])
+  folderId        String?
+  sharedWithEmail String
+  permission      String // e.g., 'read', 'write'
+  createdAt       DateTime @default(now())
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}

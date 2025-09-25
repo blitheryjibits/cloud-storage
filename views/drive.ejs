@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Drive</title>
+  <link href="/output.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <%- include('partials/header') %>
+
+  <!-- Main Content -->
+  <main class="p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">My Drive</h2>
+    
+    <button id="openUploadModal" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+      Upload Files
+    </button>
+    <button id="openUploadFolderModal" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+      Upload Folder
+    </button>
+
+    <dialog id="uploadModal" class="rounded-lg shadow-xl max-w-md w-full p-0">
+      <div class="fixed inset-0 z-50 flex items-center justify-center">
+        <div id="modalFormWrapper" class="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg">
+        <!-- Close Button -->
+          <form method="dialog" class="flex justify-end">
+            <button id="closeUploadModal" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded text-sm">
+              ✕
+            </button>
+          </form>
+
+        <!-- Upload Form Partial -->
+          <%- include('partials/upload-file-form') %>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="uploadFolderModal" class="rounded-lg shadow-xl max-w-md w-full p-0">
+      <div class="fixed inset-0 z-50 flex items-center justify-center">
+        
+        <div id="modalFormWrapper" class="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-lg">
+        <!-- Close Button -->
+          <form method="dialog" class="flex justify-end">
+            <button id="closeUploadFolderModal" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded text-sm">
+              ✕
+            </button>
+          </form>
+
+        <!-- Upload Form Partial -->
+          <%- include('partials/upload-folder-form') %>
+        </div>
+      </div>
+    </dialog>
+
+
+
+    <!-- Directories -->
+    <div class="mb-6">
+      <h3 class="text-sm font-medium text-gray-600 mb-2">Folders</h3>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <% folders.forEach(folder => { %>
+          <%if (folder.name !== 'Root') { %>
+            <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
+              <div class="flex items-center space-x-2">
+                <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 6a2 2 0 012-2h4l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                </svg>
+                <span class="text-gray-800 font-medium"><%= folder.name %></span>
+              </div>
+            </div>
+          <% } %>
+        <% }) %>
+      </div>
+    </div>
+
+    <!-- Files -->
+    <div>
+      <h3 class="text-sm font-medium text-gray-600 mb-2">Files</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <% files.forEach(file => { %>
+          <a href="/api/files/<%=file.id%>" target="_blank" rel="noopener noreferrer">
+          <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition"
+          data-file-id="<%= file.id %>">
+            <div class="flex items-center space-x-2">
+              <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V7l-5-4H4z" />
+              </svg>
+              <span class="text-gray-800 font-medium"><%= file.name %></span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Modified: <%= file.updatedAt.toDateString() %></p>
+          </div>
+          </a>
+          <% }) %>
+      </div>
+    </div>
+  </main>
+
+</body>
+
+<script>
+  // Modal Script
+  const uploadModal = document.getElementById('uploadModal');
+  const uploadFolderModal = document.getElementById('uploadFolderModal');
+  const openBtn = document.getElementById('openUploadModal');
+  const closeBtn = document.getElementById('closeUploadModal');
+  const openFolderBtn = document.getElementById('openUploadFolderModal');
+  const closeFolderBtn = document.getElementById('closeUploadFolderModal');
+
+  openBtn.addEventListener('click', () => {
+    uploadModal.showModal();
+  });
+
+  closeBtn.addEventListener('click', () => {
+    uploadModal.close();
+  });
+
+  openFolderBtn.addEventListener('click', () => {
+    uploadFolderModal.showModal();
+  });
+
+  closeFolderBtn.addEventListener('click', () => {
+    uploadFolderModal.close();
+  });
+
+  // File Display script
+  const fileCards = document.querySelectorAll('[data-file-id]');
+  fileCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const fileId = card.getAttribute('data-file-id');
+      console.log('File ID:', fileId);
+      // Handle file card click (e.g., open file details)
+      
+    });
+  });
+
+</script>
+</html>

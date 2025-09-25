@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+.group::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* Just below the trigger */
+  right: 0;
+  width: 50px; /* Width of the buffer zone */
+  height: 20px; /* Height of the buffer zone */
+  background: transparent;
+  pointer-events: auto;
+}

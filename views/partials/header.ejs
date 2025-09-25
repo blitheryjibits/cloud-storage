@@ -1,0 +1,35 @@
+  <header class="bg-white shadow-md px-6 py-4 flex items-center justify-between">
+    <!-- Logo -->
+    <div class="text-xl font-bold text-indigo-600 m-1">MyCloud</div>
+
+    <!-- Search Bar -->
+    <div class="flex-1 mx-6">
+      <input type="text" placeholder="Search in Drive"
+             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+    </div>
+
+    <div class="text-sm text-gray-700 m-2"><%= user.username %></div>
+
+    <!-- Profile -->
+    <div class="relative inline-block text-left group m-1">
+        <!-- Hover trigger -->
+        <div class="flex items-center space-x-4 cursor-pointer">
+            <!-- Avatar picture -->
+            <% if (user.avatarUrl) { %>
+            <img src="<%= user.avatarUrl %>" alt="Profile" class="w-10 h-10 rounded-full border-2 border-indigo-500" />
+            <% } else { %>
+            <div class="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-lg">
+                <%= user.name ? user.name[0].toUpperCase() : user.username[0].toUpperCase() %>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Dropdown menu -->
+        <div class="absolute right-1 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-10 opacity-0 scale-95 pointer-events-none transform transition-all duration-300 ease-out group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
+            <a href="/api/users/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            Sign Out
+            </a>
+        </div>
+    </div>
+  </header>
+
