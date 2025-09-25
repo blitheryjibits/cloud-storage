@@ -3,9 +3,8 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <% files.forEach(file => { %>
             <% if (file.folderName === folderName) { %>
-                <a href="/api/files/<%=file.id%>" target="_blank" rel="noopener noreferrer">
-                <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition"
-                data-file-id="<%= file.id %>">
+                <div class="file-card bg-white p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer "
+                    data-file-id="<%= file.id %>">
                     <div class="flex items-center space-x-2">
                     <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V7l-5-4H4z" />
@@ -14,8 +13,30 @@
                     </div>
                     <p class="text-xs text-gray-500 mt-1">Modified: <%= file.updatedAt.toDateString() %></p>
                 </div>
-                </a>
+                
             <% } %>
           <% }) %>
       </div>
     </div>
+
+<script>
+  document.querySelectorAll('.file-card').forEach(card => {
+    let clickTimeout;
+    card.addEventListener('click', () => {
+      if (clickTimeout) {
+        clearTimeout(clickTimeout);
+        clickTimeout = null;
+        const fileId = card.dataset.fileId;
+        window.open(`/api/files/${fileId}`, '_blank');
+      } else {
+        clickTimeout = setTimeout(() => {
+          clickTimeout = null;
+          card.classList.toggle('ring-2');
+          card.classList.toggle('ring-blue-500');
+          card.classList.toggle('SELECTED');
+        }, 250); // short delay to distinguish single vs double click
+      }
+    });
+  });
+</script>
+    
