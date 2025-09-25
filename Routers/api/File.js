@@ -6,11 +6,12 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage })
 const { fetchFileById } = require('../../services/fileService');
 
-// Define routes...
+// List all files for a specific user
 router.get('/', async (req, res) => {
     const files = await prisma.file.findMany({ where: { ownerId: req.user.id } });
 })
 
+// Sends a file to the browser for viewing in a new tab or downloading depending on file type
 router.get('/:id', async (req, res) => {
   fetchFileById(prisma, req.params.id)
     .then(fileData => {
@@ -47,7 +48,6 @@ router.post('/upload', upload.array('files'), async (req, res) => {
       });
     }
     
-
     // Map each file to a Prisma create input
     // Add files to root folder as standard behavior
   const fileData = uploadedFiles.map(file => ({
@@ -72,7 +72,21 @@ router.post('/upload', upload.array('files'), async (req, res) => {
     console.error('Upload error:', error);
     res.status(500).json({ error: 'Failed to upload files' });
   }
-})
+}) // End upload route
+
+ router.delete('/:id', async (req, res) => {
+      const fileId = req.params.id;
+
+      try {
+        await prisma.file.delete({
+          where: { id: fileId }
+        });
+        res.status(204).send();
+      } catch (error) {
+        console.error('Error deleting file:', error);
+        res.status(500).send('Internal Server Error');
+      }
+    }); // End delete route
 
 
 module.exports = router;
