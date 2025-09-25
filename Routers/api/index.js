@@ -8,8 +8,6 @@ const activityRouter = require('./Activity');
 const shareRouter = require('./Share');
 const userRouter = require('./User');
 
-console.log('API router loaded');
-
 router.use('/files', filesRouter);
 router.use('/folders', foldersRouter);
 router.use('/auth', authRouter);
