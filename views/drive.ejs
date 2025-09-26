@@ -62,7 +62,7 @@
     <%- include('partials/folder-view', { folders }) %>
 
     <!-- Files -->
-    <%- include('partials/file-view', { files, folderName }) %>
+    <%- include('partials/file-view', { files, folderName, folderId }) %>
   </main>
 
 </body>
@@ -90,17 +90,6 @@
 
   closeFolderBtn.addEventListener('click', () => {
     uploadFolderModal.close();
-  });
-
-  // File Display script
-  const fileCards = document.querySelectorAll('[data-file-id]');
-  fileCards.forEach(card => {
-    card.addEventListener('click', () => {
-      const fileId = card.getAttribute('data-file-id');
-      console.log('File ID:', fileId);
-      // Handle file card click (e.g., open file details)
-      
-    });
   });
 
 </script>
