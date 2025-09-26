@@ -9,23 +9,27 @@ const upload = multer({ storage: storage })
 // such as viewing their drive and logging out.
 // Also, it handles any overlapping routes that include both files and folders.
 
+// Display the user's drive with root folder contents
 router.get('/drive', async (req, res) => {
     const folders = await prisma.folder.findMany({ where: { userId: req.user.id } });
     const files = await prisma.file.findMany({ where: { userId: req.user.id } });
+    const folderId = await prisma.folder.findFirst({
+      where: { name: "Root", userId: req.user.id, parentId: null }
+    });
 
-    res.render('drive', { user: req.user, folders, files, folderName: 'Root' });
+    res.render('drive', { user: req.user, folders, files, folderId, folderName: 'Root' });
     });
 
 // Retrieve and display selected folder's contents in the drive view
 router.get('/drive/:folderId', async (req, res) => {
   const folderId = req.params.folderId;
-  const folderName = await prisma.folder.findUnique({
+  const folder = await prisma.folder.findUnique({
     where: { id: folderId },
     select: { name: true }
   });
   const folders = await prisma.folder.findMany({ where: { parentId: folderId } });
   const files = await prisma.file.findMany({ where: { userId: req.user.id, folderId: folderId } });
-  res.render('drive', { user: req.user, folders, files, folderName: folderName.name || 'Root' });
+  res.render('drive', { user: req.user, folders, files, folderId, folderName: folder.name || 'Root' });
 });
 
 router.get('/logout', (req, res) => {
