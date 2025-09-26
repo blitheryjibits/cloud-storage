@@ -8,7 +8,7 @@ const { fetchFileById } = require('../../services/fileService');
 
 // List all files for a specific user
 router.get('/', async (req, res) => {
-    const files = await prisma.file.findMany({ where: { ownerId: req.user.id } });
+    const files = await prisma.file.findMany({ where: { userId: req.user.id } });
 })
 
 // Sends a file to the browser for viewing in a new tab or downloading depending on file type
@@ -74,16 +74,18 @@ router.post('/upload', upload.array('files'), async (req, res) => {
   }
 }) // End upload route
 
- router.delete('/:id', async (req, res) => {
-      const fileId = req.params.id;
+ router.post('/delete', async (req, res) => {
+      const fileIds = req.body.fileIds;
+      const folderId = req.body.folderId;
 
       try {
-        await prisma.file.delete({
-          where: { id: fileId }
+        await prisma.file.deleteMany({
+          where: { id: { in: fileIds.split(',') } }
         });
-        res.status(204).send();
-      } catch (error) {
-        console.error('Error deleting file:', error);
+
+        res.redirect(`/api/users/drive/${folderId}`);
+      } catch (error) { 
+        console.error('Error deleting files:', error);
         res.status(500).send('Internal Server Error');
       }
     }); // End delete route
