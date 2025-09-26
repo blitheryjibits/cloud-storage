@@ -28,7 +28,6 @@
     --color-gray-700: oklch(37.3% 0.034 259.733);
     --color-gray-800: oklch(27.8% 0.033 256.848);
     --color-gray-900: oklch(21% 0.034 264.665);
-    --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
     --container-sm: 24rem;
@@ -407,6 +406,9 @@
   .border-indigo-500 {
     border-color: var(--color-indigo-500);
   }
+  .bg-\[\#ef4444\] {
+    background-color: #ef4444;
+  }
   .bg-blue-500 {
     background-color: var(--color-blue-500);
   }
@@ -633,6 +635,13 @@
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
         opacity: 100%;
+      }
+    }
+  }
+  .hover\:bg-\[\#dc2626\] {
+    &:hover {
+      @media (hover: hover) {
+        background-color: #dc2626;
       }
     }
   }
