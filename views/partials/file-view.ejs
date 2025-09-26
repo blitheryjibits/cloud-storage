@@ -1,6 +1,21 @@
 <div>
-      <h3 class="text-sm font-medium text-gray-600 mb-2">Files</h3>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="flex items-center mb-4 space-x-4">
+        <h3 class="text-m font-medium text-gray-600 mb-0">Files</h3>
+
+        <!-- Delete Selected files -->
+        <div>
+            <form id="delete-form" method="POST" action="/api/files/delete">
+                <input type="hidden" name="fileIds" id="fileIds">
+                <input type="hidden" name="folderId" value="<%= folderId %>">
+                <button type="submit" id="delete-button" class="text-white text-sm px-2 py-1 mb-0 rounded hidden cursor-pointer hover:bg-[#dc2626] bg-[#ef4444]">
+                    🗑️ Move to bin
+                </button>
+            </form>
+        </div>
+    </div> 
+        
+    <!-- Files list -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <% files.forEach(file => { %>
             <% if (file.folderName === folderName) { %>
                 <div class="file-card bg-white p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer "
@@ -15,11 +30,15 @@
                 </div>
                 
             <% } %>
-          <% }) %>
-      </div>
+        <% }) %>
     </div>
+</div>
 
 <script>
+  const selectedFiles = new Set();
+  const deleteButton = document.getElementById('delete-button');
+  const fileIdsInput = document.getElementById('fileIds');
+
   document.querySelectorAll('.file-card').forEach(card => {
     let clickTimeout;
     card.addEventListener('click', () => {
@@ -31,12 +50,22 @@
       } else {
         clickTimeout = setTimeout(() => {
           clickTimeout = null;
+          const fileId = card.dataset.fileId;
           card.classList.toggle('ring-2');
           card.classList.toggle('ring-blue-500');
           card.classList.toggle('SELECTED');
-        }, 250); // short delay to distinguish single vs double click
+
+          if (card.classList.contains('SELECTED')) {
+            selectedFiles.add(fileId);
+          } else {
+            selectedFiles.delete(fileId);
+          }
+
+          // Update hidden input and button visibility
+          fileIdsInput.value = Array.from(selectedFiles).join(',');
+          deleteButton.classList.toggle('hidden', selectedFiles.size === 0);
+        }, 250);
       }
     });
   });
 </script>
-    
