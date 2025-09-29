@@ -4,10 +4,10 @@
 
         <!-- Delete Selected files -->
         <div>
-            <form id="delete-form" method="POST" action="/api/files/delete">
+            <form id="delete-files" method="POST" action="/api/files/delete">
                 <input type="hidden" name="fileIds" id="fileIds">
                 <input type="hidden" name="folderId" value="<%= folderId %>">
-                <button type="submit" id="delete-button" class="text-white text-sm px-2 py-1 mb-0 rounded hidden cursor-pointer hover:bg-[#dc2626] bg-[#ef4444]">
+                <button type="submit" id="delete-files-button" class="text-white text-sm px-2 py-1 mb-0 rounded hidden cursor-pointer hover:bg-[#dc2626] bg-[#ef4444]">
                     🗑️ Move to bin
                 </button>
             </form>
@@ -36,7 +36,7 @@
 
 <script>
   const selectedFiles = new Set();
-  const deleteButton = document.getElementById('delete-button');
+  const deleteFileBtn = document.getElementById('delete-files-button');
   const fileIdsInput = document.getElementById('fileIds');
 
   document.querySelectorAll('.file-card').forEach(card => {
@@ -63,7 +63,7 @@
 
           // Update hidden input and button visibility
           fileIdsInput.value = Array.from(selectedFiles).join(',');
-          deleteButton.classList.toggle('hidden', selectedFiles.size === 0);
+          deleteFileBtn.classList.toggle('hidden', selectedFiles.size === 0);
         }, 250);
       }
     });
