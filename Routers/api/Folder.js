@@ -26,7 +26,7 @@ router.post('/upload', upload.array('files'), async (req, res) => {
 router.get('/folders/:id', async (req, res) => {
     const { id } = req.params;
     const folder = await prisma.folder.findUnique({
-        where: { id: Number(id), userId: req.user.id }
+        where: { id: id, userId: req.user.id }
     })
 })
 
@@ -41,11 +41,13 @@ router.put('/folders/:id', async (req, res) => {
 })
 
 // Define route...
-router.delete('/folders/:id', async (req, res) => {
-    const { id } = req.params;
-    await prisma.folder.delete({
-        where: { id: Number(id), userId: req.user.id }
+router.post('/delete', async (req, res) => {
+    const { folderId } = req.body;
+    const folderIds = req.body.folderIds.split(',');
+    await prisma.folder.deleteMany({
+        where: { id: { in:folderIds }, userId: req.user.id }
     })
+    res.redirect(`/api/users/drive/${folderId}`);
 })
 
 module.exports = router;
