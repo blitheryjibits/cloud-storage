@@ -1,20 +1,66 @@
-<div class="mb-6">
-      <h3 class="text-sm font-medium text-gray-600 mb-2">Folders</h3>
-      
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <% folders.forEach(folder => { %>
-          <%if (folder.name !== 'Root') { %>
-            <a href="/api/users/drive/<%= folder.id %>">
-            <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition">
-              <div class="flex items-center space-x-2">
-                <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 6a2 2 0 012-2h4l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                </svg>
-                <span class="text-gray-800 font-medium"><%= folder.name %></span>
-              </div>
-            </div>
-            </a>
-          <% } %>
-        <% }) %>
-      </div>
+<div class="mb-6 mt-4">
+  <div class="flex items-center mb-4 space-x-4">
+    <h3 class="text-sm font-medium text-gray-600 mb-2">Folders</h3>
+    <div>
+      <form method="POST" id="delete-folders" action="/api/folders/delete">
+        <input type="hidden" id="folderIds" name="folderIds">
+        <input type="hidden" name="folderId" value="<%= folderId %>">
+        <button type="submit" id="delete-folders-button" class="text-white text-sm px-2 py-1 mb-0 rounded hidden cursor-pointer hover:bg-[#dc2626] bg-[#ef4444]">
+          🗑️ Move to bin
+        </button>
+      </form>
     </div>
+  </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <% folders.forEach(folder => { %>
+        <%if (folder.name !== 'Root') { %>
+          <div class="folder-card bg-white p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer"
+          data-folder-id="<%= folder.id %>">
+            <div class="flex items-center space-x-2 select-none">
+              <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 6a2 2 0 012-2h4l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+              </svg>
+              <span class="text-gray-800 font-medium"><%= folder.name %></span>
+            </div>
+          </div>
+        <% } %>
+      <% }) %>
+    </div>
+  </div>
+
+<script>
+  const selectedFolders = new Set();
+  const deleteFolderBtn = document.getElementById('delete-folders-button');
+  const folderIdsInput = document.getElementById('folderIds');
+
+  document.querySelectorAll('.folder-card').forEach(card => {
+    let clickTimeout;
+    card.addEventListener('click', () => {
+      if (clickTimeout) {
+        clearTimeout(clickTimeout);
+        clickTimeout = null;
+        const folderId = card.dataset.folderId;
+        location.href = `/api/users/drive/${folderId}`
+        
+      } else {
+        clickTimeout = setTimeout(() => {
+          clickTimeout = null;
+          const folderId = card.dataset.folderId;
+          card.classList.toggle('ring-2');
+          card.classList.toggle('ring-blue-500');
+          card.classList.toggle('SELECTED');
+
+          if (card.classList.contains('SELECTED')) {
+            selectedFolders.add(folderId);
+          } else {
+            selectedFolders.delete(folderId);
+          }
+
+          // Update hidden input and button visibility
+          folderIdsInput.value = Array.from(selectedFolders).join(',');
+          deleteFolderBtn.classList.toggle('hidden', selectedFolders.size === 0);
+        }, 250);
+      }
+    });
+  });
+</script>
