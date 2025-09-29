@@ -11,14 +11,14 @@ const upload = multer({ storage: storage })
 
 // Display the user's drive with root folder contents
 router.get('/drive', async (req, res) => {
-    const folders = await prisma.folder.findMany({ where: { userId: req.user.id } });
-    const files = await prisma.file.findMany({ where: { userId: req.user.id } });
-    const folderId = await prisma.folder.findFirst({
-      where: { name: "Root", userId: req.user.id, parentId: null }
-    });
-
-    res.render('drive', { user: req.user, folders, files, folderId, folderName: 'Root' });
-    });
+  const rootFolder = await prisma.folder.findFirst({
+    where: { name: "Root", userId: req.user.id, parentId: null }
+  });
+  const folders = await prisma.folder.findMany({ where: { userId: req.user.id, parentId: null } });
+  const files = await prisma.file.findMany({ where: { userId: req.user.id, folderId: rootFolder.id } });
+  
+  res.render('drive', { user: req.user, folders, files, folderId: rootFolder.id, folderName: rootFolder.folderName });
+});
 
 // Retrieve and display selected folder's contents in the drive view
 router.get('/drive/:folderId', async (req, res) => {
