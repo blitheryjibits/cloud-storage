@@ -24,12 +24,14 @@ router.get('/drive', async (req, res) => {
 router.get('/drive/:folderId', async (req, res) => {
   const folderId = req.params.folderId;
   const folder = await prisma.folder.findUnique({
-    where: { id: folderId },
-    select: { name: true }
+    where: { id: folderId }
   });
+  if (!folder) {
+    return res.redirect('/api/users/drive');
+  }
   const folders = await prisma.folder.findMany({ where: { parentId: folderId } });
   const files = await prisma.file.findMany({ where: { userId: req.user.id, folderId: folderId } });
-  res.render('drive', { user: req.user, folders, files, folderId, folderName: folder.name || 'Root' });
+  res.render('drive', { user: req.user, folders, files, folderId, folderName: folder?.name || 'Root' });
 });
 
 router.get('/logout', (req, res) => {
