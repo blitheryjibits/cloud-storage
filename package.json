@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "devStart": "nodemon script.ts",
-    "start": "nodemon app.js",
+    "start-watch": "nodemon app.js",
+    "start": "node app.js",
+    "prisma-generate": "prisma generate",
+    "prisma-migrate": "prisma migrate dev",
     "build": "tailwindcss -i ./styles/input.css -o ./styles/output.css --prettify"
   },
   "keywords": [],
