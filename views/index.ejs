@@ -31,6 +31,19 @@
         </a>
       </div>
 
+      <!-- Guest Login -->
+      <form action="/api/auth/login" method="POST" class="mt-6">
+        <input type="hidden" name="username" value="guest" />
+        <input type="hidden" name="password" value="guest" />
+
+        <button
+          type="submit"
+          class="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-800 hover:cursor-pointer transition duration-200"
+        >
+          Continue as Guest
+        </button>
+      </form>
+
       <div class="mt-10 text-sm text-gray-200">
         <p>Secure. Fast. Built for you.</p>
       </div>
