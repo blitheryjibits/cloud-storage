@@ -1,18 +1,18 @@
-const express = require('express');
+import express from "express";
+import filesRouter from "./File.js";
+import foldersRouter from "./Folder.js";
+import authRouter from "./Auth.js";
+// import activityRouter from "./Activity.js";
+// import shareRouter from "./Share.js";
+import userRouter from "./User.js";
+
 const router = express.Router();
 
-const filesRouter = require('./File');
-const foldersRouter = require('./Folder');
-const authRouter = require('./Auth');
-const activityRouter = require('./Activity');
-const shareRouter = require('./Share');
-const userRouter = require('./User');
+router.use("/files", filesRouter);
+router.use("/folders", foldersRouter);
+router.use("/auth", authRouter);
+// router.use("/activities", activityRouter);
+// router.use("/shares", shareRouter);
+router.use("/users", userRouter);
 
-router.use('/files', filesRouter);
-router.use('/folders', foldersRouter);
-router.use('/auth', authRouter);
-router.use('/activities', activityRouter);
-router.use('/shares', shareRouter);
-router.use('/users', userRouter);
-
-module.exports = router;
+export default router;

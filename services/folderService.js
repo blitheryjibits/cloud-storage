@@ -1,50 +1,46 @@
 async function findOrCreateFolder(prisma, name, userId, parentId) {
   const existing = await prisma.folder.findFirst({
-    where: { name, userId, parentId }
+    where: { name, userId, parentId },
   });
 
   if (existing) return existing;
 
   return await prisma.folder.create({
-    data: { name, userId, parentId }
-
+    data: { name, userId, parentId },
   });
 }
 
-async function uploadFolder(prisma, userId, files) {
-    for (const file of files) {
-        const parts = file.originalname.split('/');
-        const fileName = parts.pop();
-        let parentId = null;
-        console.log(`Folder: folders: ${parts} \n File: ${fileName}`);
-       
-        // Create/find each folder in the file's path
-        for (const folderName of parts) {
-            const folder = await findOrCreateFolder(prisma, folderName, userId, parentId);
-            parentId = folder.id;
-        }
+export async function uploadFolder(prisma, userId, files, parentId = null) {
+  for (const file of files) {
+    const parts = file.originalname.split("/");
+    const fileName = parts.pop();
 
-        const fileData = {
-            name: fileName,
-            size: file.size,
-            mimeType: file.mimetype,
-            data: file.buffer,
-            user: {
-                connect: { id: userId }
-            },
-            folderName: parts.pop() || null
-        };
+    // IMPORTANT: start fresh for each file
+    let currentParentId = parentId;
 
-        if (parentId) {
-            fileData.folder = {
-                connect: { id: parentId }
-            };
-            
-        }
+    // Create/find each folder in the file's path
+    for (const folderName of parts) {
+      const folder = await findOrCreateFolder(
+        prisma,
+        folderName,
+        userId,
+        currentParentId,
+      );
 
-        await prisma.file.create({ data: fileData });
+      currentParentId = folder.id; // only mutate the local variable
     }
-    
-}
 
-module.exports = { uploadFolder };
+    const fileData = {
+      name: fileName,
+      size: file.size,
+      mimeType: file.mimetype,
+      data: file.buffer,
+      user: { connect: { id: userId } },
+      folder: currentParentId
+        ? { connect: { id: currentParentId } }
+        : undefined,
+    };
+
+    await prisma.file.create({ data: fileData });
+  }
+}
