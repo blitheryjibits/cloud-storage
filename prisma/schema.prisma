@@ -15,7 +15,7 @@ model User {
   password   String
   email      String     @unique
   createdAt  DateTime   @default(now())
-  userAvatar String?    @default("/images/default-avatar.png") // URL to avatar image
+  userAvatar String?    @default("https://ui-avatars.com/api/?name=Guest&background=4F46E5&color=fff") // URL to avatar image
   folders    Folder[]
   files      File[]
   activities Activity[]
