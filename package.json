@@ -6,10 +6,10 @@
   "scripts": {
     "devStart": "nodemon script.ts",
     "dev": "nodemon app.js",
+    "build": "npm install && prisma generate",
     "start": "node app.js",
-    "prisma-generate": "prisma generate",
-    "prisma-migrate": "prisma migrate dev",
-    "build": "tailwindcss -i ./styles/input.css -o ./styles/output.css --prettify"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "keywords": [],
   "author": "",
