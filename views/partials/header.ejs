@@ -22,8 +22,8 @@
         <!-- Hover trigger -->
         <div class="flex items-center space-x-4 cursor-pointer">
             <!-- Avatar picture -->
-            <% if (user.avatarUrl) { %>
-            <img src="<%= user.avatarUrl %>" alt="Profile" class="w-10 h-10 rounded-full border-2 border-indigo-500" />
+            <% if (user.userAvatar) { %>
+            <img src="<%= user.userAvatar %>" alt="Profile" class="w-10 h-10 rounded-full border-2 border-indigo-500" />
             <% } else { %>
             <div class="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-lg">
                 <%= user.name ? user.name[0].toUpperCase() : user.username[0].toUpperCase() %>
